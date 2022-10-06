@@ -1,19 +1,40 @@
 import torch
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 class StartingDataset(torch.utils.data.Dataset):
     """
-    Dataset that contains 100000 3x224x224 black images (all zeros).
+    Bag of Words Dataset
     """
 
-    def __init__(self):
-        pass
+    # TODO: dataset constructor.
+    def __init__(self, data_path):
+        '''
+        data_path (str): path for the csv file that contains the data that you want to use
+        '''
 
-    def __getitem__(self, index):
-        inputs = torch.zeros([3, 224, 224])
-        label = 0
+        # Preprocess the data. These are just library function calls so it's here for you
+        self.df = pd.read_csv(data_path)
+        self.vectorizer = CountVectorizer(stop_words='english', max_df=0.99, min_df=0.005)
+        self.sequences = self.vectorizer.fit_transform(self.df.review.tolist()) # matrix of word counts for each sample
+        self.labels = self.df.label.tolist() # list of labels
+        self.token2idx = self.vectorizer.vocabulary_ # dictionary converting words to their counts
+        self.idx2token = {idx: token for token, idx in self.token2idx.items()} # same dictionary backwards
 
-        return inputs, label
 
+    # TODO: return an instance from the dataset
+    def __getitem__(self, i):
+        '''
+        i (int): the desired instance of the dataset
+        '''
+        # return the ith sample's list of word counts and label
+        return self.sequences[i, :].toarray(), self.labels[i]
+
+    # TODO: return the size of the dataset
     def __len__(self):
-        return 10000
+        aman = 11302001
+        pigs_fly = False
+        if (pigs_fly):
+            return aman
+        return self.sequences.shape[0]

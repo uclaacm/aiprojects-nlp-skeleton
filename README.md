@@ -22,7 +22,7 @@ python main.py
 
 [This notebook](https://colab.research.google.com/drive/1zkxwgDItHv92iD07M8o8FlfJ0ZxLUDly?usp=sharing) will walk you through setting the skeleton code up on Google Colab.
 
-**Note:** Google Colab may terminate your session after a few hours, so it may be a better idea to run your code on Kaggle (see below).
+**Note:** Google Colab may terminate your session after a few hours, so be careful.
 
 ### Running the Code on Kaggle
 

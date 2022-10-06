@@ -37,6 +37,8 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
 
         # Loop over each batch in the dataset
         for batch in tqdm(train_loader):
+            # TODO: Forward propagate
+
             # TODO: Backpropagation and gradient descent
 
             # Periodically evaluate our model + log to Tensorboard
