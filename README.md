@@ -2,9 +2,9 @@
 
 ## Setup
 
-1. Create a new conda environment.
+1. Create a new conda environment. (Follow instructions given to you by officers or refer to the Conda reference doc.)
 
-2. Install PyTorch.
+2. Install PyTorch. Go to https://pytorch.org/. Then, scroll down to 'Install Pytorch' and select the right configuration for your machine. Lastly, copy the command that is provided and run it when you have the correct Conda environment activated.
 
 3. As you work on the project, you will end up installing many more packages.
 
@@ -15,6 +15,7 @@
 After activating your conda environment, run the following command:
 
 ```
+conda activate <NAME OF ENVIRONMENT>
 python main.py
 ```
 
@@ -35,7 +36,7 @@ python main.py
 3. To access your code, run the following command (replacing the URL):
 
    ```
-   !git clone "https://github.com/uclaacmai/projects-skeleton-code"
+   !git clone "<my-github-repo-url-here>"
    ```
 
    This should clone your repository into the `/kaggle/working` folder.
