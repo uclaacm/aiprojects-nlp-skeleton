@@ -17,8 +17,10 @@ def main():
     print("Batch size:", constants.BATCH_SIZE)
 
     # Initalize dataset and model. Then train the model!
-    train_dataset = StartingDataset()
-    val_dataset = StartingDataset()
+    data_path = "train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
+
+    train_dataset = StartingDataset(data_path)
+    val_dataset = StartingDataset(data_path)
     model = StartingNetwork()
     starting_train(
         train_dataset=train_dataset,

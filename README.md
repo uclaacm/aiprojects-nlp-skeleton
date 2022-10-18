@@ -2,9 +2,9 @@
 
 ## Setup
 
-1. Create a new conda environment.
+1. Create a new conda environment. (Follow instructions given to you by officers or refer to the Conda reference doc.)
 
-2. Install PyTorch.
+2. Install PyTorch. Go to https://pytorch.org/. Then, scroll down to 'Install Pytorch' and select the right configuration for your machine. Lastly, copy the command that is provided and run it when you have the correct Conda environment activated.
 
 3. As you work on the project, you will end up installing many more packages.
 
@@ -15,14 +15,15 @@
 After activating your conda environment, run the following command:
 
 ```
+conda activate <NAME OF ENVIRONMENT>
 python main.py
 ```
 
 ### Running the Code on Google Colab
 
-[This notebook](https://colab.research.google.com/drive/1zkxwgDItHv92iD07M8o8FlfJ0ZxLUDly?usp=sharing) will walk you through setting the skeleton code up on Google Colab.
+[This notebook](https://colab.research.google.com/drive/1cyIbRoubY0ZpXoGvOVSgO8kM4gFM31Op?usp=sharing) will walk you through setting the skeleton code up on Google Colab. Remember to make a copy!
 
-**Note:** Google Colab may terminate your session after a few hours, so be careful.
+**Note:** Google Colab may terminate your session after a few hours, so be careful. Consider adding torch.save to your training loop to save model weights regularly.
 
 ### Running the Code on Kaggle
 
@@ -35,7 +36,7 @@ python main.py
 3. To access your code, run the following command (replacing the URL):
 
    ```
-   !git clone "https://github.com/uclaacmai/projects-skeleton-code"
+   !git clone "<my-github-repo-url-here>"
    ```
 
    This should clone your repository into the `/kaggle/working` folder.
@@ -63,31 +64,9 @@ python main.py
 
 ### Method 1: Downloading from kaggle.com
 
-1. Go to [kaggle.com](kaggle.com) and create an account.
+1. Go to [kaggle.com](kaggle.com) and create anaccount.
 
-2. Join either the [Cassava leaf](https://www.kaggle.com/c/cassava-leaf-disease-classification) or [Humpback whale](https://www.kaggle.com/c/humpback-whale-identification) competition.
+2. Join either the [Quora NLP Competition](https://www.kaggle.com/competitions/quora-insincere-questions-classification/data).
 
 3. In the data tab, you should be able to download the data as a zip file.
 
-### Method 2: Downloading from the Kaggle API
-
-1. Install the Kaggle API:
-
-   ```
-   pip install kaggle
-   ```
-
-   If you're on Mac or Linux, you may have to run:
-
-   ```
-   pip install --user kaggle
-   ```
-
-2. Copy the `kaggle.json` file to the location `~/.kaggle/kaggle.json` (or `C:\Users\<Windows-username>\.kaggle\kaggle.json` if you are on Windows).
-
-3. Download the zipped dataset.
-
-   ```
-   # Use humpback-whale-identification for 🐋 dataset
-   kaggle competitions download -c cassava-leaf-disease-classification
-   ```

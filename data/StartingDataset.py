@@ -17,11 +17,10 @@ class StartingDataset(torch.utils.data.Dataset):
         # Preprocess the data. These are just library function calls so it's here for you
         self.df = pd.read_csv(data_path)
         self.vectorizer = CountVectorizer(stop_words='english', max_df=0.99, min_df=0.005)
-        self.sequences = self.vectorizer.fit_transform(self.df.review.tolist()) # matrix of word counts for each sample
-        self.labels = self.df.label.tolist() # list of labels
+        self.sequences = self.vectorizer.fit_transform(self.df.question_text.tolist()) # matrix of word counts for each sample
+        self.labels = self.df.target.tolist() # list of labels
         self.token2idx = self.vectorizer.vocabulary_ # dictionary converting words to their counts
         self.idx2token = {idx: token for token, idx in self.token2idx.items()} # same dictionary backwards
-
 
     # TODO: return an instance from the dataset
     def __getitem__(self, i):
