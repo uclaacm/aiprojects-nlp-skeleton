@@ -1,10 +1,8 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
 from tqdm import tqdm
 
 
-def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
+def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval, loss_fn, optimizer):
     """
     Trains and evaluates a model.
 
@@ -26,10 +24,6 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     val_loader = torch.utils.data.DataLoader(
         val_dataset, batch_size=batch_size, shuffle=True
     )
-
-    # Initalize optimizer (for gradient descent) and loss function
-    optimizer = optim.Adam(model.parameters())
-    loss_fn = nn.CrossEntropyLoss()
 
     step = 0
     for epoch in range(epochs):
