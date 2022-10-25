@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
+import numpy as np
 
 
 def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
@@ -39,7 +40,11 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         # Loop over each batch in the dataset
         for batch, (X, y) in tqdm(enumerate(train_loader)):
             # Predictions and loss
+            X = X.type(torch.float)
+            y = y.type(torch.float)
+
             pred = model(X)
+            pred = np.squeeze(pred)
             loss = loss_fn(pred, y)
 
             # Backpropagation and optimization
@@ -60,7 +65,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
                 print("validation accuracy: ", val_accuracy)
 
                 # TODO: Log the results to Tensorboard.
-                
+
 
 
 def compute_accuracy(outputs, labels):
@@ -87,7 +92,11 @@ def evaluate(val_loader, model, loss_fn):
     with torch.no_grad():
         # There should only be one batch (the entire validation set)
         for (X, y) in val_loader:
+            X = X.type(torch.float)
+            y = y.type(torch.float)
+
             pred = model(X)
+            pred = np.squeeze(pred)
             loss = loss_fn(pred, y)
             accuracy = compute_accuracy(pred, y)
             return loss, accuracy
