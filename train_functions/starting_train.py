@@ -30,16 +30,25 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     # Initalize optimizer (for gradient descent) and loss function
     optimizer = optim.Adam(model.parameters())
     loss_fn = nn.CrossEntropyLoss()
+    criterion = nn.BCEWithLogitsLoss() #loss function 
 
     step = 0
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1} of {epochs}")
-
         # Loop over each batch in the dataset
         for batch in tqdm(train_loader):
-            # TODO: Forward propagate
+            # TODO: redo validation split
+            statements, labels = batch
+            optimizer.zero_grad()
 
+            statements = statements.type(torch.float)
+            output = model.forward(statements)
+            
+            
             # TODO: Backpropagation and gradient descent
+            loss = criterion(output.squeeze(), labels.float())
+            loss.backward()
+            optimizer.step()
 
             # Periodically evaluate our model + log to Tensorboard
             if step % n_eval == 0:
