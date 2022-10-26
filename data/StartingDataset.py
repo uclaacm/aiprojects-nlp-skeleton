@@ -6,6 +6,19 @@ from sklearn.feature_extraction.text import CountVectorizer
 class StartingDataset(torch.utils.data.Dataset):
     """
     Bag of Words Dataset
+    
+    Parameters
+    ----------
+    qid : List[str]
+        A list of question id's for each question
+    sequences : Vector, size (1306122, 110)
+        How frequent a word appears in the Quora question text
+    labels: List[int]
+        A list of labels such that labels[i] = 0 means sequences[i] is not junk (good).
+    token2idx: Dict{str : int}, size 110
+        {'did': 22, 'people': 68}...
+    idx2token: Dict{int : str}
+        opposite of token2idx
     """
 
     # TODO: dataset constructor.
