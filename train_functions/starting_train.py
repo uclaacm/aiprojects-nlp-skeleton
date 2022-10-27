@@ -100,8 +100,8 @@ def evaluate(val_loader, model, loss_fn):
     val_loss = 0
     with torch.no_grad():
         for batch in tqdm(val_loader):
-            val_output = model.forward(batch)
-            val_loss += 0
+            statements, labels = batch
+            val_output = model.forward(statements)
+            val_loss += loss_fn(val_output.squeeze(), labels)
 
-    
     model.train()

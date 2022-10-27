@@ -22,8 +22,12 @@ def main():
 
     dataset = StartingDataset(data_path)
     # generator for reproducable "random" splits
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [int(0.8 * len(dataset)), int(0.2 * len(dataset))], 
-        generator=torch.Generator().manual_seed(42))
+    trainSize = int(0.8 * len(dataset))
+    valSize = 1 - trainSize
+    # train_dataset, val_dataset = torch.utils.data.random_split(dataset, [trainSize, valSize], 
+    #     generator=torch.Generator().manual_seed(42))
+    train_dataset = StartingDataset(data_path)
+    val_dataset = StartingDataset(data_path)
     model = StartingNetwork(len(train_dataset.token2idx), 50)
     starting_train(
         train_dataset=train_dataset,
