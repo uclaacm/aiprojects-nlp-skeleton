@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm, tqdm_notebook
 
 
@@ -15,6 +16,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         hyperparameters: Dictionary containing hyperparameters.
         n_eval:          Interval at which we evaluate our model.
     """
+    writer = SummaryWriter()
 
     # Get keyword arguments
     batch_size, epochs = hyperparameters["batch_size"], hyperparameters["epochs"]
@@ -59,6 +61,7 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
                 print('Loss after mini-batch %5d: %.3f' %
                 (step + 1, curLoss / 500))
                 curLoss = 0
+                
                 # TODO:
                 # Compute validation loss and accuracy.
                 # Log the results to Tensorboard. 
@@ -92,4 +95,13 @@ def evaluate(val_loader, model, loss_fn):
 
     TODO!
     """
-    pass
+    model.eval()
+    # loss calculation
+    val_loss = 0
+    with torch.no_grad():
+        for batch in tqdm(val_loader):
+            val_output = model.forward(batch)
+            val_loss += 0
+
+    
+    model.train()
