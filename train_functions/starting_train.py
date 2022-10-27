@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from tqdm import tqdm
+from tqdm import tqdm, tqdm_notebook
 
 
 def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
@@ -32,11 +32,11 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     loss_fn = nn.CrossEntropyLoss()
     criterion = nn.BCEWithLogitsLoss() #loss function 
 
-    step = 0
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1} of {epochs}")
+        curLoss = 0.0
         # Loop over each batch in the dataset
-        for batch in tqdm(train_loader):
+        for step, batch in enumerate(tqdm(train_loader), 0):
             # TODO: redo validation split
             statements, labels = batch
             optimizer.zero_grad()
@@ -51,18 +51,20 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
             optimizer.step()
 
             # Periodically evaluate our model + log to Tensorboard
+            curLoss += loss.item()
             if step % n_eval == 0:
                 # TODO:
                 # Compute training loss and accuracy.
                 # Log the results to Tensorboard.
-
+                print('Loss after mini-batch %5d: %.3f' %
+                (step + 1, curLoss / 500))
+                curLoss = 0
                 # TODO:
                 # Compute validation loss and accuracy.
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
                 evaluate(val_loader, model, loss_fn)
 
-            step += 1
 
         print()
 
