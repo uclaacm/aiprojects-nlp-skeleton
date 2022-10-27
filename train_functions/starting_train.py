@@ -41,9 +41,10 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         for step, batch in enumerate(tqdm(train_loader), 0):
             # TODO: redo validation split
             statements, labels = batch
+            statements = statements.type(torch.float)
+            labels = labels.type(torch.float)
             optimizer.zero_grad()
 
-            statements = statements.type(torch.float)
             output = model.forward(statements)
             
             
@@ -58,15 +59,14 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
                 # TODO:
                 # Compute training loss and accuracy.
                 # Log the results to Tensorboard.
-                print('Loss after mini-batch %5d: %.3f' %
-                (step + 1, curLoss / 500))
+                writer.add_scalar('Loss/Train', curLoss, step)
                 curLoss = 0
                 
                 # TODO:
                 # Compute validation loss and accuracy.
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
-                evaluate(val_loader, model, loss_fn)
+                evaluate(val_loader, model, loss_fn, writer, step)
 
 
         print()
@@ -89,7 +89,7 @@ def compute_accuracy(outputs, labels):
     return n_correct / n_total
 
 
-def evaluate(val_loader, model, loss_fn):
+def evaluate(val_loader, model, loss_fn, writer, step):
     """
     Computes the loss and accuracy of a model on the validation dataset.
 
@@ -99,9 +99,14 @@ def evaluate(val_loader, model, loss_fn):
     # loss calculation
     val_loss = 0
     with torch.no_grad():
-        for batch in tqdm(val_loader):
+        for batch_index, batch in enumerate(tqdm(val_loader)):
             statements, labels = batch
+            statements = statements.type(torch.float)
+            labels = labels.type(torch.float)
             val_output = model.forward(statements)
-            val_loss += loss_fn(val_output.squeeze(), labels)
-
+            val_loss += loss_fn(val_output.squeeze(), labels).item()
+            if batch_index == 100:
+                break
+    val_loss /= 100
+    writer.add_scalar('Loss/Test', val_loss, step)
     model.train()
