@@ -22,7 +22,7 @@ class StartingDataset(torch.utils.data.Dataset):
     """
 
     # TODO: dataset constructor.
-    def __init__(self, data_path):
+    def __init__(self, data_path, dataset_config):
         '''
         data_path (str): path for the csv file that contains the data that you want to use
         '''
