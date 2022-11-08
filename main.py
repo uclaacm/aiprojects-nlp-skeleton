@@ -6,10 +6,20 @@ from networks.StartingNetwork import StartingNetwork
 from train_functions.starting_train import starting_train
 import torch
 
+import argparse
+import configparser
 
-def main():
+model_type_matching = {
+    "starting": StartingNetwork
+}
+
+dataset_type_match = {
+    "starting": StartingDataset
+}
+
+def main(dataset_type, model_type, dataset_config, model_config, data_path, train_hyperparameters, random_seed=42):
     # Get command line arguments
-    hyperparameters = {"epochs": constants.EPOCHS, "batch_size": constants.BATCH_SIZE}
+    hyperparameters = {"epochs": train_hyperparameters["epochs"], "batch_size": train_hyperparameters["batch_size"]}
 
     # TODO: Add GPU support. This line of code might be helpful.
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -18,23 +28,47 @@ def main():
     print("Batch size:", constants.BATCH_SIZE)
 
     # Initalize dataset and model. Then train the model!
-    data_path = "train.csv" #TODO: make sure you have train.csv downloaded in your project! this assumes it is in the project's root directory (ie the same directory as main) but you can change this as you please
 
-    dataset = StartingDataset(data_path)
+    dataset = dataset_type_match[dataset_type](data_path, dataset_config)
     # splits dataset into two with random indices
-    trainSize = int(0.8 * len(dataset))
+    trainSize = int(train_hyperparameters["train_split"] * len(dataset))
     valSize = len(dataset) - trainSize
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [trainSize, valSize], 
-        generator=torch.Generator().manual_seed(42))
-    model = StartingNetwork(len(train_dataset.dataset.idx2token), 50)
+    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [trainSize, valSize],
+        generator=torch.Generator().manual_seed(random_seed))
+    print(len(train_dataset.dataset.idx2token))
+    model = model_type_matching[model_type](model_config)
     starting_train(
         train_dataset=train_dataset,
         val_dataset=val_dataset,
         model=model,
         hyperparameters=hyperparameters,
-        n_eval=constants.N_EVAL,
+        n_eval=train_hyperparameters["n_eval"],
     )
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("--config_path", type=str, default="./config/starting.ini")
+    parser.add_argument("--data_path", type=str, default="train.csv")
+
+    args = parser.parse_args()
+
+    config = configparser.ConfigParser()
+    config.read(args.config_path)
+
+    train_hyperparameters = {
+        "epochs": int(config["TRAINING"]["EPOCHS"]), 
+        "batch_size": int(config["TRAINING"]["BATCH_SIZE"]),
+        "n_eval": int(config["TRAINING"]["N_EVAL"]),
+        "train_split": float(config["DATASET"]["SPLIT"])
+    }
+
+    main(
+        config["DATASET"]["TYPE"], 
+        config["MODEL"]["TYPE"], 
+        config["DATASET"],
+        config["MODEL"], 
+        args.data_path, 
+        train_hyperparameters
+        )

@@ -9,10 +9,10 @@ class StartingNetwork(torch.nn.Module):
     """
 
     # TODO: change all input/output numbers to constants, etc. 
-    def __init__(self, vocab_size, hidden1):
+    def __init__(self, config):
         super().__init__()
-        self.fc1 = nn.Linear(vocab_size, hidden1) # What could that number mean!?!?!? Ask an officer to find out :)
-        self.fc2 = nn.Linear(hidden1, 1)
+        self.fc1 = nn.Linear(int(config["INPUT_DIMENSION"]), int(config["hidden1"]))
+        self.fc2 = nn.Linear(int(config["hidden1"]), 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):

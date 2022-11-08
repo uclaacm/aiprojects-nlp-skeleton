@@ -4,3 +4,8 @@ __pycache__
 
 training_summaries
 runs
+
+data/embeddings/*
+!data/embeddings/.gitkeep
+
+.DS_Store
