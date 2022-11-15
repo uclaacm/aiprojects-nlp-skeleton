@@ -1,4 +1,3 @@
-from turtle import hideturtle
 import torch
 import torch.nn as nn
 

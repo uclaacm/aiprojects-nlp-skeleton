@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm
 
 
 def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
@@ -38,7 +38,8 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         print(f"Epoch {epoch + 1} of {epochs}")
         curLoss = 0.0
         # Loop over each batch in the dataset
-        for step, batch in enumerate(tqdm(train_loader), 0):
+        step = 0
+        for batch in tqdm(train_loader):
             # TODO: redo validation split
             statements, labels = batch
             statements = statements.type(torch.float)
@@ -55,6 +56,8 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
 
             # Periodically evaluate our model + log to Tensorboard
             curLoss += loss.item()
+
+            step += 1
             if step % n_eval == 0:
                 # TODO:
                 # Compute training loss and accuracy.
@@ -67,9 +70,6 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
                 evaluate(val_loader, model, loss_fn, writer, step)
-
-
-        print()
 
 
 def compute_accuracy(outputs, labels):
@@ -99,7 +99,7 @@ def evaluate(val_loader, model, loss_fn, writer, step):
     # loss calculation
     val_loss = 0
     with torch.no_grad():
-        for batch_index, batch in enumerate(tqdm(val_loader)):
+        for batch_index, batch in enumerate(val_loader):
             statements, labels = batch
             statements = statements.type(torch.float)
             labels = labels.type(torch.float)

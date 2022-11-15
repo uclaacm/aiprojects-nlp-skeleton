@@ -14,14 +14,13 @@ class VariableLSTM(nn.Module):
             batch_first=True,
             bidirectional=True
         )
-        self.drop = nn.Dropout(p=0.5)
+        self.drop = nn.Dropout(p=0.2)
 
         self.fc = nn.Linear(2 * self.dimension, 1)
 
     def forward(self, X, X_lengths):
         # https://towardsdatascience.com/lstm-text-classification-using-pytorch-2c6c657f8fc0
         packed_input = pack_padded_sequence(X, X_lengths, batch_first=True, enforce_sorted=False)
-        print(packed_input)
         packed_output, _ = self.lstm(packed_input)
         output, _ = pad_packed_sequence(packed_output, batch_first=True)
 
