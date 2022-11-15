@@ -2,20 +2,37 @@ import os
 
 import constants
 from data.StartingDataset import StartingDataset
+from data.embedWrapping import GoogleNewsEmbeddor
+from data.EmbeddingDataset import EmbeddingsDataset
 from networks.StartingNetwork import StartingNetwork
+from networks.VariableLSTM import VariableLSTM
 from train_functions.starting_train import starting_train
 import torch
 
 import argparse
 import configparser
 
+embeddor_type_matching = {
+    "google_news": GoogleNewsEmbeddor
+}
+
+
+def generate_embedding(data_path, dataset_config):
+    embeddor_type = dataset_config["embedding_type"]
+    embeddor = embeddor_type_matching[embeddor_type](dataset_config["embeddor_path"], DEBUG=True)
+    return EmbeddingsDataset(data_path, embeddor)
+
+
 model_type_matching = {
-    "starting": StartingNetwork
+    "starting": StartingNetwork,
+    "lstm": VariableLSTM
 }
 
 dataset_type_match = {
-    "starting": StartingDataset
+    "starting": StartingDataset,
+    "embedding": generate_embedding
 }
+
 
 def main(dataset_type, model_type, dataset_config, model_config, data_path, train_hyperparameters, random_seed=42):
     # Get command line arguments
@@ -35,7 +52,6 @@ def main(dataset_type, model_type, dataset_config, model_config, data_path, trai
     valSize = len(dataset) - trainSize
     train_dataset, val_dataset = torch.utils.data.random_split(dataset, [trainSize, valSize],
         generator=torch.Generator().manual_seed(random_seed))
-    print(len(train_dataset.dataset.idx2token))
     model = model_type_matching[model_type](model_config)
     starting_train(
         train_dataset=train_dataset,
