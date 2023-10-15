@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Create a new conda environment. (Follow instructions given to you by officers or refer to the Conda reference doc.)
+1. [Create a new conda environment.](https://shine-molecule-f84.notion.site/Installing-Conda-and-PyTorch-db0e9b20677d46c09508b95ed600dd78)
 
 2. Install PyTorch. Go to https://pytorch.org/. Then, scroll down to 'Install Pytorch' and select the right configuration for your machine. Lastly, copy the command that is provided and run it when you have the correct Conda environment activated.
 
@@ -12,61 +12,18 @@
 
 ### Running the Code Locally
 
-After activating your conda environment, run the following command:
+1. Clone / fork this repository.
 
+2. Open a terminal in the root directory of the repository
+
+3. Activate the conda environment you created using the following command:
 ```
 conda activate <NAME OF ENVIRONMENT>
-python main.py
+```
+   
+4. Populate the conda environment using `aiprojects.yml`:
+```
+conda env update --file aiprojects.yml --prune
 ```
 
-### Running the Code on Google Colab
-
-[This notebook](https://colab.research.google.com/drive/1cyIbRoubY0ZpXoGvOVSgO8kM4gFM31Op?usp=sharing) will walk you through setting the skeleton code up on Google Colab. Remember to make a copy!
-
-**Note:** Google Colab may terminate your session after a few hours, so be careful. Consider adding torch.save to your training loop to save model weights regularly.
-
-### Running the Code on Kaggle
-
-[This notebook](https://www.kaggle.com/franktzheng/acm-ai-projects-kaggle-skeleton) will walk you through setting the skeleton code up on Kaggle.
-
-1. Navigate to the [code tab of the Kaggle competition](https://www.kaggle.com/c/cassava-leaf-disease-classification/code). Click on the "New Notebook" button to create a new notebook. The dataset should be automatically loaded in the `/kaggle/input` folder.
-
-2. To use the GPU, click the three dots in the top-right corner and select Accelerator > GPU.
-
-3. To access your code, run the following command (replacing the URL):
-
-   ```
-   !git clone "<my-github-repo-url-here>"
-   ```
-
-   This should clone your repository into the `/kaggle/working` folder.
-
-4. Change directories into your repository by running the command:
-
-   ```
-   cd <name of your repository>
-   ```
-
-5. You should now be able to import your code normally. For instance, the following code will import the starting code:
-
-   ```python
-   import constants
-   from datasets.StartingDataset import StartingDataset
-   from networks.StartingNetwork import StartingNetwork
-   from train_functions.starting_train import starting_train
-   ```
-
-6. If you want your code to run without keeping the tab open, you can click on "Save version" and commit your code. Make sure to save any outputs (e.g. log files) to the `/kaggle/working`, and you should be able to access them in the future.
-
-**IMPORTANT:** If you want to pull new changes in the Kaggle notebook, first run `!git pull`, and then RESTART your notebook (Run > Restart & clear all outputs).
-
-## Downloading the Dataset From Kaggle
-
-### Method 1: Downloading from kaggle.com
-
-1. Go to [kaggle.com](kaggle.com) and create anaccount.
-
-2. Join either the [Quora NLP Competition](https://www.kaggle.com/competitions/quora-insincere-questions-classification/data).
-
-3. In the data tab, you should be able to download the data as a zip file.
-
+5. Go to `start_here.pynb`. This is the main file where you're going to run all of your code from.
