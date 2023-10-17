@@ -21,9 +21,9 @@
 conda activate <NAME OF ENVIRONMENT>
 ```
    
-4. Populate the conda environment using `aiprojects.yml`:
+4. Populate the conda environment using `acmprojects.yml`:
 ```
-conda env update --file aiprojects.yml --prune
+conda env update --file acmprojects.yml --prune
 ```
 
 5. Go to `start_here.pynb`. This is the main file where you're going to run all of your code from.
