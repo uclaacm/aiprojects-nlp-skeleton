@@ -2,9 +2,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
+from torch.utils.tensorboard import SummaryWriter
+import numpy as np
 
-
-def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
+def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval, device):
     """
     Trains and evaluates a model.
 
@@ -24,34 +25,63 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         train_dataset, batch_size=batch_size, shuffle=True
     )
     val_loader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=True
+        val_dataset, batch_size=len(val_dataset[0]), shuffle=True
     )
 
     # Initalize optimizer (for gradient descent) and loss function
     optimizer = optim.Adam(model.parameters())
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.BCELoss()
 
     step = 0
+    
+    writer = SummaryWriter()
+
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1} of {epochs}")
 
         # Loop over each batch in the dataset
         for batch in tqdm(train_loader):
+            
+            features, labels = batch
+            # features = features.to(device)
+            # labels = labels.to(device)
+
             # TODO: Forward propagate
 
-            # TODO: Backpropagation and gradient descent
+            # outputs = model(features)
+            # outputs = torch.flatten(outputs)
+
+            outputs = foward_prop(features, labels, model, device)
+
+            # TODO: Backpropagation and gradient descent            
+
+            loss = loss_fn(outputs, labels)
+
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
 
             # Periodically evaluate our model + log to Tensorboard
             if step % n_eval == 0:
                 # TODO:
                 # Compute training loss and accuracy.
                 # Log the results to Tensorboard.
+                predictions = torch.round(outputs)
+                acc = compute_accuracy(predictions, labels)
+                writer.add_scalar('Loss/train', loss, epoch)
+                writer.add_scalar('Accuracy/train', acc, epoch)
 
                 # TODO:
                 # Compute validation loss and accuracy.
                 # Log the results to Tensorboard. 
                 # Don't forget to turn off gradient calculations!
-                evaluate(val_loader, model, loss_fn)
+
+                loss, acc = evaluate(val_loader, model, loss_fn, device) 
+                writer.add_scalar('Loss/val', loss, epoch)
+                writer.add_scalar('Accuracy/val', acc, epoch)
+
+                #turn on training, evaluate turns off training
+                model.train()
 
             step += 1
 
@@ -75,10 +105,30 @@ def compute_accuracy(outputs, labels):
     return n_correct / n_total
 
 
-def evaluate(val_loader, model, loss_fn):
+def evaluate(val_loader, model, loss_fn, device):
     """
     Computes the loss and accuracy of a model on the validation dataset.
 
     TODO!
     """
-    pass
+    #turn off training
+    model.eval()
+
+    features, labels = next(iter(val_loader))
+    
+    outputs = foward_prop(features, labels, model, device)
+    
+    loss = loss_fn(outputs, labels)
+    predictions = torch.round(outputs)
+
+    return loss, compute_accuracy(outputs, labels)
+
+def foward_prop(features, labels, model, device): 
+    
+    features = features.to(device)
+    labels = labels.to(device)
+
+    outputs = model(features)
+    outputs = torch.flatten(outputs)
+
+    return outputs

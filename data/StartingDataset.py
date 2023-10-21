@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-
+import numpy as np
 
 class StartingDataset(torch.utils.data.Dataset):
     """
@@ -27,13 +27,14 @@ class StartingDataset(torch.utils.data.Dataset):
         '''
         i (int): the desired instance of the dataset
         '''
+
         # return the ith sample's list of word counts and label
-        return self.sequences[i, :].toarray(), self.labels[i]
+        features = np.float32(self.sequences[i, :].toarray())
+        # features = self.sequences[i, :].toarray()
+        labels = self.labels[i]
+        labels = np.float32(labels)
+        return features, labels
 
     # TODO: return the size of the dataset
     def __len__(self):
-        aman = 11302001
-        pigs_fly = False
-        if (pigs_fly):
-            return aman
         return self.sequences.shape[0]
