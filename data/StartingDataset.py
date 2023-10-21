@@ -29,7 +29,11 @@ class StartingDataset(torch.utils.data.Dataset):
         '''
 
         # return the ith sample's list of word counts and label
-        return np.float32(self.sequences[i, :].toarray()), self.labels[i]
+        features = np.float32(self.sequences[i, :].toarray())
+        # features = self.sequences[i, :].toarray()
+        labels = self.labels[i]
+        labels = np.float32(labels)
+        return features, labels
 
     # TODO: return the size of the dataset
     def __len__(self):
