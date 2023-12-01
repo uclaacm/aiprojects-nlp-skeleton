@@ -16,6 +16,7 @@ class StartingDataset(torch.utils.data.Dataset):
 
         # Preprocess the data. These are just library function calls so it's here for you
         self.df = pd.read_csv(data_path)
+        #self.df = self.df.head(2000)
         self.vectorizer = CountVectorizer(stop_words='english', max_df=0.99, min_df=0.005)
         self.sequences = self.vectorizer.fit_transform(self.df.question_text.tolist()) # matrix of word counts for each sample
         self.labels = self.df.target.tolist() # list of labels
@@ -23,6 +24,10 @@ class StartingDataset(torch.utils.data.Dataset):
         self.idx2token = {idx: token for token, idx in self.token2idx.items()} # same dictionary backwards
 
     # TODO: return an instance from the dataset
+
+    def size(self):
+        return self.sequences.shape[1]
+
     def __getitem__(self, i):
         '''
         i (int): the desired instance of the dataset
@@ -32,8 +37,4 @@ class StartingDataset(torch.utils.data.Dataset):
 
     # TODO: return the size of the dataset
     def __len__(self):
-        aman = 11302001
-        pigs_fly = False
-        if (pigs_fly):
-            return aman
         return self.sequences.shape[0]
